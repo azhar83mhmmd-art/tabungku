@@ -1,0 +1,5 @@
+{
+  "version": "1.0.0",
+  "downloadUrl": "https://tabungku.example.com/download",
+  "notes": "Ganti file ini di repo GitHub setiap rilis baru. Naikkan angka \"version\" dan update \"downloadUrl\" ke link unduhan resmi supaya pengguna lama otomatis mendapat popup notifikasi update."
+}
