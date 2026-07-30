@@ -1,0 +1,237 @@
+/* =========================================================
+   scanner.css — Smart Barcode Scanner
+   Mengikuti design tokens TabungKu (--brand, --surface, --radius, dst)
+   ========================================================= */
+
+.scanner-overlay{
+  position: fixed; inset:0;
+  background: rgba(6, 20, 14, 0.55);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  z-index: 200;
+  display:flex; align-items:flex-end; justify-content:center;
+  opacity:0; pointer-events:none;
+  transition: opacity .25s ease;
+}
+.scanner-overlay.open{ opacity:1; pointer-events:auto; }
+
+.scanner-modal{
+  width:100%; max-width:480px;
+  max-height: 92vh;
+  background: var(--surface);
+  border-radius: 22px 22px 0 0;
+  box-shadow: 0 -12px 32px rgba(0,0,0,0.28);
+  display:flex; flex-direction:column;
+  transform: translateY(24px);
+  transition: transform .28s cubic-bezier(.32,.72,.35,1);
+  overflow:hidden;
+}
+.scanner-overlay.open .scanner-modal{ transform: translateY(0); }
+
+.scanner-header{
+  display:flex; align-items:center; justify-content:space-between;
+  padding: 16px 18px 10px;
+}
+.scanner-title{
+  display:flex; align-items:center; gap:8px;
+  font-weight:700; font-size:15px; color: var(--text);
+  margin:0;
+}
+.scanner-tabs{
+  display:flex; gap:6px; padding: 0 14px 12px;
+}
+.scanner-tab{
+  flex:1; padding:9px 6px; border:none; border-radius: 12px;
+  background: var(--surface-2); color: var(--text-dim);
+  font-size:12.5px; font-weight:600; cursor:pointer;
+  transition: background .2s ease, color .2s ease;
+}
+.scanner-tab.active{ background: var(--brand); color:#fff; }
+
+.scanner-body{
+  padding: 4px 18px 22px;
+  overflow-y:auto;
+  flex:1;
+}
+
+/* ---------- Kamera ---------- */
+.scanner-cam-wrap{
+  position:relative; width:100%; aspect-ratio: 3/4;
+  background:#000; border-radius: var(--radius);
+  overflow:hidden;
+}
+.scanner-cam-wrap video{
+  width:100%; height:100%; object-fit:cover;
+}
+.scanner-frame{
+  position:absolute; inset: 14% 10%;
+  pointer-events:none;
+}
+.scanner-frame .corner{
+  position:absolute; width:26px; height:26px;
+  border-color: var(--brand);
+  border-style: solid; border-width:0;
+}
+.corner.tl{ top:0; left:0; border-top-width:3px; border-left-width:3px; border-radius:6px 0 0 0; }
+.corner.tr{ top:0; right:0; border-top-width:3px; border-right-width:3px; border-radius:0 6px 0 0; }
+.corner.bl{ bottom:0; left:0; border-bottom-width:3px; border-left-width:3px; border-radius:0 0 0 6px; }
+.corner.br{ bottom:0; right:0; border-bottom-width:3px; border-right-width:3px; border-radius:0 0 6px 0; }
+.scanner-laser{
+  position:absolute; left:2%; right:2%; top:0;
+  height:2px;
+  background: linear-gradient(90deg, transparent, var(--brand) 50%, transparent);
+  box-shadow: 0 0 8px 1px var(--brand);
+  animation: scannerLaserMove 1.8s ease-in-out infinite;
+}
+@keyframes scannerLaserMove{
+  0%{ top:4%; opacity:.2; }
+  50%{ top:94%; opacity:1; }
+  100%{ top:4%; opacity:.2; }
+}
+.scanner-flash-btn{
+  position:absolute; bottom:12px; right:12px;
+  width:40px; height:40px; border-radius:50%;
+  background: rgba(0,0,0,0.45); color:#fff; border:none;
+  display:flex; align-items:center; justify-content:center;
+  cursor:pointer;
+}
+.scanner-flash-btn.on{ background: var(--brand); color:#0B2A1F; }
+.scanner-hint{
+  text-align:center; font-size:12.5px; color: var(--text-dim);
+  margin: 12px 0 0;
+}
+
+/* ---------- Upload Foto ---------- */
+.scanner-upload-box{
+  display:flex; flex-direction:column; align-items:center; gap:8px;
+  padding: 34px 16px;
+  border: 1.6px dashed var(--border);
+  border-radius: var(--radius);
+  color: var(--text-dim); font-size:13px; text-align:center;
+  cursor:pointer; background: var(--surface-2);
+}
+.scanner-upload-preview{
+  width:100%; max-height:220px; object-fit:contain;
+  border-radius: var(--radius-sm); margin-top:12px;
+  background: var(--surface-2);
+}
+
+/* ---------- Input Manual ---------- */
+.scanner-manual-wrap{ padding-top:8px; }
+
+/* ---------- Searching / Loading Skeleton ---------- */
+.scanner-searching{ padding: 10px 0 4px; }
+.scanner-skeleton-photo{
+  width:100%; height:150px; border-radius: var(--radius-sm);
+  background: linear-gradient(100deg, var(--surface-2) 30%, var(--border) 50%, var(--surface-2) 70%);
+  background-size: 200% 100%;
+  animation: scannerShimmer 1.3s ease-in-out infinite;
+}
+.scanner-skeleton-line{
+  height:12px; border-radius:6px; margin-top:12px;
+  background: linear-gradient(100deg, var(--surface-2) 30%, var(--border) 50%, var(--surface-2) 70%);
+  background-size: 200% 100%;
+  animation: scannerShimmer 1.3s ease-in-out infinite;
+}
+.scanner-skeleton-line.w70{ width:70%; }
+.scanner-skeleton-line.w40{ width:40%; }
+@keyframes scannerShimmer{
+  0%{ background-position: 200% 0; }
+  100%{ background-position: -200% 0; }
+}
+.scanner-search-log{
+  text-align:center; font-size:12.5px; color: var(--text-dim); margin-top:16px;
+}
+
+/* ---------- Hasil Produk Ditemukan ---------- */
+.scanner-result-top{ display:flex; gap:12px; align-items:flex-start; }
+.scanner-result-photo{
+  width:64px; height:64px; border-radius:14px; object-fit:cover;
+  background: var(--surface-2); flex-shrink:0;
+}
+.scanner-result-photo-empty{ display:flex; align-items:center; justify-content:center; color: var(--text-faint); }
+.scanner-result-name{ font-weight:700; font-size:15px; margin:0 0 2px; color: var(--text); }
+.scanner-result-brand{ font-size:12.5px; color: var(--text-dim); margin:0; }
+.scanner-result-source{ font-size:11px; color: var(--text-faint); margin:4px 0 0; }
+
+.scanner-result-badges{ display:flex; gap:6px; flex-wrap:wrap; margin-top:12px; }
+.scanner-badge{
+  font-size:11px; font-weight:700; padding:4px 9px; border-radius:20px;
+  background: var(--surface-2); color: var(--text-dim);
+}
+.scanner-badge.halal{ background:#D6F5E5; color:#0E8F55; }
+.scanner-badge[class*="nutri-a"]{ background:#D6F5E5; color:#0E8F55; }
+.scanner-badge[class*="nutri-b"]{ background:#E8F5D0; color:#5B8A0E; }
+.scanner-badge[class*="nutri-c"]{ background:#FEF0C7; color:#B25E09; }
+.scanner-badge[class*="nutri-d"]{ background:#FDE4CF; color:#C4470E; }
+.scanner-badge[class*="nutri-e"]{ background:#FDE4E1; color:#D92D20; }
+.scanner-badge[class*="eco-"]{ background: var(--surface-2); }
+
+.scanner-result-detail{ margin-top:12px; background: var(--surface-2); border-radius: var(--radius-sm); padding:10px 14px; }
+.scanner-detail-row{ display:flex; justify-content:space-between; gap:10px; font-size:12.5px; padding:5px 0; color: var(--text-dim); }
+.scanner-detail-row b{ color: var(--text); text-align:right; }
+
+.scanner-details-toggle{ margin-top:12px; font-size:13px; color: var(--text-dim); }
+.scanner-details-toggle summary{ cursor:pointer; font-weight:600; color: var(--text); padding:6px 0; }
+.scanner-details-toggle p{ margin:6px 0 0; line-height:1.5; }
+
+.scanner-nutri-grid{ display:grid; grid-template-columns: 1fr 1fr; gap:8px; margin-top:8px; }
+.scanner-nutri-grid div{ display:flex; justify-content:space-between; background: var(--surface-2); border-radius:8px; padding:6px 10px; font-size:12px; }
+
+.scanner-cert-chips{ display:flex; gap:6px; flex-wrap:wrap; margin-top:12px; }
+.scanner-chip{ font-size:11px; background: var(--surface-2); color: var(--text-dim); padding:4px 10px; border-radius:20px; }
+
+.scanner-result-actions{ display:flex; gap:10px; margin-top:18px; }
+.scanner-result-actions .btn-outline, .scanner-result-actions .btn-primary{ flex:1; }
+
+/* ---------- Tidak Ditemukan ---------- */
+.scanner-notfound{ text-align:center; padding:14px 0 4px; }
+.scanner-notfound-icon{ color: var(--text-faint); margin-bottom:8px; }
+.scanner-notfound-title{ font-weight:700; font-size:14.5px; color: var(--text); margin:0 0 4px; }
+.scanner-notfound-actions{ display:flex; flex-direction:column; gap:10px; margin-top:18px; }
+
+.scanner-manual-fill{ padding-top:6px; }
+.scanner-checkbox-row{
+  display:flex; align-items:flex-start; gap:8px; font-size:12.5px; color: var(--text-dim);
+  margin: 4px 0 16px;
+}
+.scanner-checkbox-row input{ margin-top:2px; }
+
+/* ---------- Tombol pemicu scanner di halaman Tambah Pengeluaran ---------- */
+.scanner-trigger-row{ display:flex; gap:10px; margin-bottom:14px; }
+.scanner-trigger-btn{
+  flex:1; display:flex; flex-direction:column; align-items:center; gap:6px;
+  padding: 12px 8px; border-radius: var(--radius-sm);
+  background: var(--surface-2); border:1px solid var(--border);
+  color: var(--text); font-size:12px; font-weight:600; cursor:pointer;
+}
+.scanner-trigger-btn svg{ color: var(--brand); }
+.scanner-trigger-btn:active{ transform: scale(0.96); }
+
+.scanner-prefill-card{
+  display:flex; gap:10px; align-items:center;
+  background: var(--surface-2); border-radius: var(--radius-sm);
+  padding:10px 12px; margin-bottom:14px;
+}
+.scanner-prefill-card img{ width:42px; height:42px; border-radius:10px; object-fit:cover; background:#fff; }
+.scanner-prefill-card .txt{ flex:1; min-width:0; }
+.scanner-prefill-card .txt p{ margin:0; font-size:12.5px; }
+.scanner-prefill-card .txt p.name{ font-weight:700; color: var(--text); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.scanner-prefill-card .txt p.src{ color: var(--text-faint); font-size:11px; }
+.scanner-prefill-clear{ background:none; border:none; color: var(--text-faint); cursor:pointer; padding:4px; }
+
+@media (min-width: 720px){
+  .scanner-overlay{ align-items:center; }
+  .scanner-modal{ border-radius: 22px; max-height: 86vh; }
+}
+
+/* ---------- Statistik Scan ---------- */
+.scan-top-list{ margin-top:16px; }
+.scan-top-list-title{ font-size:12.5px; font-weight:700; color: var(--text); margin:0 0 8px; }
+.scan-top-row{
+  display:flex; justify-content:space-between; gap:10px;
+  font-size:12.5px; color: var(--text-dim);
+  padding:7px 0; border-bottom:1px solid var(--border);
+}
+.scan-top-row:last-child{ border-bottom:none; }
+.scan-top-row b{ color: var(--text); text-align:right; white-space:nowrap; }
